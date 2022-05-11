@@ -1,4 +1,4 @@
-package lists;
+package main.lists;
 
 public interface IList<T> {
     public boolean add(T x);

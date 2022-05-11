@@ -4,9 +4,10 @@
  *
  * Created on December 30, 2005, 12:14 AM
  */
-package lists;
+package test.lists;
 
 import junit.framework.*;
+import main.lists.LazyList;
 
 /**
  * @author Maurice Herlihy

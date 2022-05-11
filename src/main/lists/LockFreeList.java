@@ -8,7 +8,7 @@
  * Copyright 2006 Elsevier Inc. All rights reserved.
  */
 
-package lists;
+package main.lists;
 
 import java.util.concurrent.atomic.AtomicMarkableReference;
 

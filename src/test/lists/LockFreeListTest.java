@@ -4,28 +4,29 @@
  *
  * Created on December 30, 2005, 12:14 AM
  */
-package lists;
+package test.lists;
 
 import junit.framework.*;
+import main.lists.LockFreeList;
 
 /**
  * @author Maurice Herlihy
  */
-public class OptimisticListTest extends TestCase {
+public class LockFreeListTest extends TestCase {
   
   private final static int THREADS = 8;
   private final static int TEST_SIZE = 128;
   private final static int PER_THREAD = TEST_SIZE / THREADS;
-  OptimisticList<Integer> instance;
+  LockFreeList<Integer> instance;
   Thread[] thread = new Thread[THREADS];
   
-  public OptimisticListTest(String testName) {
+  public LockFreeListTest(String testName) {
     super(testName);
-    instance = new OptimisticList<Integer>();
+    instance = new LockFreeList<Integer>();
   }
   
   public static Test suite() {
-    TestSuite suite = new TestSuite(OptimisticListTest.class);
+    TestSuite suite = new TestSuite(LockFreeListTest.class);
     
     return suite;
   }

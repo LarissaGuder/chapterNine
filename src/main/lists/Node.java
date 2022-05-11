@@ -1,4 +1,4 @@
-package lists;
+package main.lists;
 
 public class Node<T> {
     public Node(T item) {

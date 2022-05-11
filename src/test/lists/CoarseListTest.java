@@ -4,28 +4,29 @@
  *
  * Created on December 30, 2005, 12:14 AM
  */
-package lists;
+package test.lists;
 
 import junit.framework.*;
+import main.lists.CoarseList;
 
 /**
  * @author Maurice Herlihy
  */
-public class LockFreeListTest extends TestCase {
+public class CoarseListTest extends TestCase {
   
   private final static int THREADS = 8;
   private final static int TEST_SIZE = 128;
   private final static int PER_THREAD = TEST_SIZE / THREADS;
-  LockFreeList<Integer> instance;
+  CoarseList<Integer> instance;
   Thread[] thread = new Thread[THREADS];
   
-  public LockFreeListTest(String testName) {
+  public CoarseListTest(String testName) {
     super(testName);
-    instance = new LockFreeList<Integer>();
+    instance = new CoarseList<Integer>();
   }
   
   public static Test suite() {
-    TestSuite suite = new TestSuite(LockFreeListTest.class);
+    TestSuite suite = new TestSuite(CoarseListTest.class);
     
     return suite;
   }

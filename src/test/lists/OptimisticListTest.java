@@ -4,28 +4,29 @@
  *
  * Created on December 30, 2005, 12:14 AM
  */
-package lists;
+package test.lists;
 
 import junit.framework.*;
+import main.lists.OptimisticList;
 
 /**
  * @author Maurice Herlihy
  */
-public class FineListTest extends TestCase {
+public class OptimisticListTest extends TestCase {
   
   private final static int THREADS = 8;
   private final static int TEST_SIZE = 128;
   private final static int PER_THREAD = TEST_SIZE / THREADS;
-  FineList<Integer> instance;
+  OptimisticList<Integer> instance;
   Thread[] thread = new Thread[THREADS];
   
-  public FineListTest(String testName) {
+  public OptimisticListTest(String testName) {
     super(testName);
-    instance = new FineList<Integer>();
+    instance = new OptimisticList<Integer>();
   }
   
   public static Test suite() {
-    TestSuite suite = new TestSuite(FineListTest.class);
+    TestSuite suite = new TestSuite(OptimisticListTest.class);
     
     return suite;
   }

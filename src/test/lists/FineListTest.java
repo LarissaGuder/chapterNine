@@ -4,28 +4,29 @@
  *
  * Created on December 30, 2005, 12:14 AM
  */
-package lists;
+package test.lists;
 
 import junit.framework.*;
+import main.lists.FineList;
 
 /**
  * @author Maurice Herlihy
  */
-public class CoarseListTest extends TestCase {
+public class FineListTest extends TestCase {
   
   private final static int THREADS = 8;
   private final static int TEST_SIZE = 128;
   private final static int PER_THREAD = TEST_SIZE / THREADS;
-  CoarseList<Integer> instance;
+  FineList<Integer> instance;
   Thread[] thread = new Thread[THREADS];
   
-  public CoarseListTest(String testName) {
+  public FineListTest(String testName) {
     super(testName);
-    instance = new CoarseList<Integer>();
+    instance = new FineList<Integer>();
   }
   
   public static Test suite() {
-    TestSuite suite = new TestSuite(CoarseListTest.class);
+    TestSuite suite = new TestSuite(FineListTest.class);
     
     return suite;
   }
