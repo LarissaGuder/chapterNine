@@ -8,28 +8,38 @@
  * Copyright 2006 Elsevier Inc. All rights reserved.
  */
 package main.lists;
+
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import main.experiments.util.Monitor;
+import main.lists.util.BaseMonitoredList;
+
 /**
  * Fine-grained synchronization: lock coupling (hand-over-hand locking).
+ * 
  * @param T Item type.
  * @author Maurice Herlihy
  */
-public class FineList<T> {
+public class FineList<T> extends BaseMonitoredList<T> {
   /**
    * First list entry
    */
   private Node head;
+
   /**
    * Constructor
    */
-  public FineList() {
+  public FineList(Monitor<T> monitor, T headItem, T tailItem) {
     // Add sentinels to start and end
-    head      = new Node(Integer.MIN_VALUE);
-    head.next = new Node(Integer.MAX_VALUE);
+    super(monitor);
+    head = new Node(headItem);
+    head.next = new Node(tailItem);
   }
+
   /**
    * Add an element.
+   * 
    * @param item element to add
    * @return true iff element was not there already
    */
@@ -61,8 +71,10 @@ public class FineList<T> {
       pred.unlock();
     }
   }
+
   /**
    * Remove an element.
+   * 
    * @param item element to remove
    * @return true iff element was present
    */
@@ -93,6 +105,7 @@ public class FineList<T> {
       pred.unlock();
     }
   }
+
   public boolean contains(T item) {
     Node last = null, pred = null, curr = null;
     int key = item.hashCode();
@@ -116,6 +129,7 @@ public class FineList<T> {
       pred.unlock();
     }
   }
+
   /**
    * list Node
    */
@@ -136,8 +150,10 @@ public class FineList<T> {
      * synchronizes individual Node
      */
     Lock lock;
+
     /**
      * Constructor for usual Node
+     * 
      * @param item element in list
      */
     Node(T item) {
@@ -145,8 +161,10 @@ public class FineList<T> {
       this.key = item.hashCode();
       this.lock = new ReentrantLock();
     }
+
     /**
      * Constructor for sentinel Node
+     * 
      * @param key should be min or max int value
      */
     Node(int key) {
@@ -154,14 +172,31 @@ public class FineList<T> {
       this.key = key;
       this.lock = new ReentrantLock();
     }
+
     /**
      * Lock Node
      */
-    void lock() {lock.lock();}
+    void lock() {
+      lock.lock();
+    }
+
     /**
      * Unlock Node
      */
-    void unlock() {lock.unlock();}
+    void unlock() {
+      lock.unlock();
+    }
+  }
+
+  @Override
+  public int count() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public String printToString() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
-
