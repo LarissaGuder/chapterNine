@@ -9,11 +9,8 @@
  */
 package main.lists;
 
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import main.experiments.util.Monitor;
-import main.lists.util.BaseMonitoredList;
-import main.lists.util.Node;
 
 /**
  * List using coarse-grained synchronization.
@@ -21,25 +18,39 @@ import main.lists.util.Node;
  * @param T Item type.
  * @author Maurice Herlihy
  */
-public class CoarseList<T> extends BaseMonitoredList<T> {
-    private Node<T> head;
-    private final ReentrantLock lock = new ReentrantLock();
-    private T headItem;
-    private T tailItem;
+public class CoarseList<T> {
+    /**
+     * First list Node
+     */
+    private Node head;
+    /**
+     * Last list Node
+     */
+    private Node tail;
+    /**
+     * Synchronizes access to list
+     */
+    private Lock lock = new ReentrantLock();
 
-    public CoarseList(Monitor<T> monitor, T headItem, T tailItem) {
-        super(monitor);
-        this.headItem = headItem;
-        this.tailItem = tailItem;
-        head = new Node<>(headItem);
-        Node<T> tail = new Node<>(tailItem);
-        head.next = tail;
+    /**
+     * Constructor
+     */
+    public CoarseList() {
+        // Add sentinels to start and end
+        head = new Node(Integer.MIN_VALUE);
+        tail = new Node(Integer.MAX_VALUE);
+        head.next = this.tail;
     }
 
-    @Override
+    /**
+     * Add an element.
+     * 
+     * @param item element to add
+     * @return true iff element was not there already
+     */
+
     public boolean add(T item) {
-        super.add(item);
-        Node<T> pred, curr;
+        Node pred, curr;
         int key = item.hashCode();
         lock.lock();
         try {
@@ -52,7 +63,7 @@ public class CoarseList<T> extends BaseMonitoredList<T> {
             if (key == curr.key) {
                 return false;
             } else {
-                Node<T> node = new Node<T>(item);
+                Node node = new Node(item);
                 node.next = curr;
                 pred.next = node;
                 return true;
@@ -62,95 +73,92 @@ public class CoarseList<T> extends BaseMonitoredList<T> {
         }
     }
 
-    @Override
-    public boolean contains(T item) {
-        super.contains(item);
-        Node<T> pred, curr;
-        int key = item.hashCode();
-        lock.lock();
-        try {
-            pred = head;
-            curr = pred.next;
-            while (curr.key < key) {
-                pred = curr;
-                curr = curr.next;
-            }
-            if (key == curr.key) {
-                return true;
-            } else {
-                return false;
-            }
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    @Override
+    /**
+     * Remove an element.
+     * 
+     * @param item element to remove
+     * @return true iff element was present
+     */
     public boolean remove(T item) {
-        super.remove(item);
-        Node<T> pred, curr;
+        Node pred, curr;
         int key = item.hashCode();
         lock.lock();
         try {
-            pred = head;
+            pred = this.head;
             curr = pred.next;
             while (curr.key < key) {
                 pred = curr;
                 curr = curr.next;
             }
-            if (key == curr.key) {
+            if (key == curr.key) { // present
                 pred.next = curr.next;
                 return true;
             } else {
-                return false;
+                return false; // not present
             }
-        } finally {
+        } finally { // always unlock
             lock.unlock();
         }
     }
 
-    @Override
-    public int count() {
-        int count = 0;
-        Node<T> pred, curr;
+    /**
+     * Test whether element is present
+     * 
+     * @param item element to test
+     * @return true iff element is present
+     */
+    public boolean contains(T item) {
+        Node pred, curr;
+        int key = item.hashCode();
         lock.lock();
         try {
             pred = head;
             curr = pred.next;
-            while (pred.next != null) {
-                count++;
+            while (curr.key < key) {
                 pred = curr;
                 curr = curr.next;
             }
-        } finally {
+            return (key == curr.key);
+        } finally { // always unlock
             lock.unlock();
         }
-        return count - 1; // discounts head item
     }
 
-    @Override
-    public String printToString() {
-        int count = 0;
-        Node<T> pred, curr;
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        lock.lock();
-        try {
-            pred = head;
-            curr = pred.next;
-            while (pred.next != null) {
-                if (curr.item != this.tailItem) {
-                    count++;
-                    sb.append(curr.key + ", ");
-                }
-                pred = curr;
-                curr = curr.next;
-            }
-            sb.append("]");
-        } finally {
-            lock.unlock();
+    /**
+     * list Node
+     */
+    private class Node {
+        /**
+         * actual item
+         */
+        T item;
+        /**
+         * item's hash code
+         */
+        int key;
+        /**
+         * next Node in list
+         */
+        Node next;
+
+        /**
+         * Constructor for usual Node
+         * 
+         * @param item element in list
+         */
+        Node(T item) {
+            this.item = item;
+            this.key = item.hashCode();
         }
-        return count + " items: " + sb.toString();
-    }
 
+        /**
+         * Constructor for sentinel Node
+         * 
+         * @param key should be min or max int value
+         */
+        Node(int key) {
+            this.item = null;
+            this.key = key;
+        }
+    }
 }

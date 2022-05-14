@@ -12,16 +12,13 @@ package main.lists;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import main.experiments.util.Monitor;
-import main.lists.util.BaseMonitoredList;
-
 /**
  * Fine-grained synchronization: lock coupling (hand-over-hand locking).
  * 
  * @param T Item type.
  * @author Maurice Herlihy
  */
-public class FineList<T> extends BaseMonitoredList<T> {
+public class FineList<T> {
   /**
    * First list entry
    */
@@ -30,11 +27,10 @@ public class FineList<T> extends BaseMonitoredList<T> {
   /**
    * Constructor
    */
-  public FineList(Monitor<T> monitor, T headItem, T tailItem) {
+  public FineList() {
     // Add sentinels to start and end
-    super(monitor);
-    head = new Node(headItem);
-    head.next = new Node(tailItem);
+    head = new Node(Integer.MIN_VALUE);
+    head.next = new Node(Integer.MAX_VALUE);
   }
 
   /**
@@ -186,17 +182,5 @@ public class FineList<T> extends BaseMonitoredList<T> {
     void unlock() {
       lock.unlock();
     }
-  }
-
-  @Override
-  public int count() {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  @Override
-  public String printToString() {
-    // TODO Auto-generated method stub
-    return null;
   }
 }
