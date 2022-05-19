@@ -126,6 +126,21 @@ public class FineList<T> {
     }
   }
 
+  public int count() {
+    int count = 0;
+    Node pred, curr;
+    try {
+        pred = head;
+        curr = pred.next;
+        while (pred.next != null) {
+            count++;
+            pred = curr;
+            curr = curr.next;
+        }
+    } finally {
+    }
+    return count-1; //discounts head item
+}
   /**
    * list Node
    */
@@ -182,5 +197,7 @@ public class FineList<T> {
     void unlock() {
       lock.unlock();
     }
+
+    
   }
 }

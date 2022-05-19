@@ -119,6 +119,16 @@ public class LazyList<T> {
       curr = curr.next;
     return curr.key == key && !curr.marked;
   }
+
+  public int count() {
+    int count = 0;
+    Node curr = head;
+    while (curr.next != null) {
+        if (!curr.marked) count++;
+        curr = curr.next;
+    }
+    return count-1;
+}
   /**
    * list Node
    */

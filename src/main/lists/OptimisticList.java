@@ -124,6 +124,17 @@ public class OptimisticList<T> {
     }
     return false;
   }
+
+  public int count() {
+    int count = 0;
+    Entry node = head;
+    while (node.next != null) {
+        count++;
+        node = node.next;
+    }
+    return count-1;
+}
+
   /**
    * list entry
    */

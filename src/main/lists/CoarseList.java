@@ -124,6 +124,24 @@ public class CoarseList<T> {
         }
     }
 
+
+    public int count() {
+        int count = 0;
+        Node pred, curr;
+        lock.lock();
+        try {
+            pred = head;
+            curr = pred.next;
+            while (pred.next != null) {
+                count++;
+                pred = curr;
+                curr = curr.next;
+            }
+        } finally {
+            lock.unlock();
+        }
+        return count-1; //discounts head item
+    }
     /**
      * list Node
      */
@@ -161,4 +179,6 @@ public class CoarseList<T> {
             this.key = key;
         }
     }
+
+
 }
