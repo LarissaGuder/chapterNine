@@ -1,6 +1,5 @@
 package main;
 
-import java.util.concurrent.ThreadLocalRandom;
 
 import main.lists.CoarseList;
 import main.lists.FineList;
@@ -8,7 +7,7 @@ import main.lists.LazyList;
 import main.lists.OptimisticList;
 import main.experiments.CoarseListExperiment;
 import main.experiments.FineListExperiment;
-import main.experiments.util.Random;
+import main.experiments.LazyListExperiment;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -17,7 +16,9 @@ public class App {
                 valorMinimo, valorMaximo, tamanhoPopulacaoInicial, warmup);
         FineListExperiment.runExperiment(numeroThreads, tempoExecucao, probabilidadeAdd, probabilidadeContains,
                 valorMinimo, valorMaximo, tamanhoPopulacaoInicial, warmup);
-                
+        LazyListExperiment.runExperiment(numeroThreads, tempoExecucao, probabilidadeAdd, probabilidadeContains,
+                valorMinimo, valorMaximo, tamanhoPopulacaoInicial, warmup);
+        
         // coarseList.add(10);
     }
 
