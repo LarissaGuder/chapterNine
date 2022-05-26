@@ -1,5 +1,9 @@
 package main.experiments;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 import main.experiments.util.Random;
 import main.lists.CoarseList;
 
@@ -77,26 +81,33 @@ public class CoarseListExperiment {
     public static void runExperiment(int numeroThreads, int tempoExecucao, int probabilidadeAdd,
             int probabilidadeContains, int valorMinimo, int valorMaximo, int tamanhoPopulacaoInicial,
             int warmup) {
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter("CoarseListExperiment.csv", "UTF-8");
+            writer.println("threads,add,contains,remove,population");
+            for (int i = 2; i <= numeroThreads; i = i + 2) {
+                coarseList = new CoarseList<>();
+                countRemove = 0;
+                countContains = 0;
+                countAdd = 0;
 
-        for (int i = 2; i <= numeroThreads; i = i + 2) {
-            coarseList = new CoarseList<>();
-            countRemove = 0;
-            countContains = 0;
-            countAdd = 0;
+                for (int k = 0; k < tamanhoPopulacaoInicial; k++) {
+                    coarseList.add(k);
+                }
 
-            for (int k = 0; k < tamanhoPopulacaoInicial; k++) {
-                coarseList.add(k);
+                running = true;
+                count = false;
+
+                testThreads(i, tempoExecucao, probabilidadeAdd, probabilidadeContains, valorMinimo, valorMaximo);
+                writer.print(i + ",");
+                writer.print(countAdd / tempoExecucao + ",");
+                writer.print(countContains / tempoExecucao + ",");
+                writer.print(countRemove / tempoExecucao + ",");
+                writer.println(coarseList.count());
             }
-
-            running = true;
-            count = false;
-
-            testThreads(i, tempoExecucao, probabilidadeAdd, probabilidadeContains, valorMinimo, valorMaximo);
-            System.out.print(i + ",");
-            System.out.print(countAdd / tempoExecucao + ",");
-            System.out.print(countContains / tempoExecucao + ",");
-            System.out.print(countRemove / tempoExecucao + ",");
-            System.out.println(coarseList.count());
+            writer.close();
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
 
     }
