@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicMarkableReference;
 
 /**
  * Lock-free List based on M. Michael's algorithm.
+ * 
  * @param T Item type.
  * @author Maurice Herlihy
  */
@@ -22,16 +23,20 @@ public class LockFreeList<T> {
    * First list node
    */
   Node head;
+
   /**
    * Constructor
    */
   public LockFreeList() {
-    this.head  = new Node(Integer.MIN_VALUE);
+    this.head = new Node(Integer.MIN_VALUE);
     Node tail = new Node(Integer.MAX_VALUE);
-    while (!head.next.compareAndSet(null, tail, false, false));
+    while (!head.next.compareAndSet(null, tail, false, false))
+      ;
   }
+
   /**
    * Add an element.
+   * 
    * @param item element to add
    * @return true iff element was not there already
    */
@@ -55,8 +60,10 @@ public class LockFreeList<T> {
       }
     }
   }
+
   /**
    * Remove an element.
+   * 
    * @param item element to remove
    * @return true iff element was present
    */
@@ -81,8 +88,10 @@ public class LockFreeList<T> {
       }
     }
   }
+
   /**
    * Test whether element is present
+   * 
    * @param item element to test
    * @return true iff element is present
    */
@@ -93,6 +102,20 @@ public class LockFreeList<T> {
     Node pred = window.pred, curr = window.curr;
     return (curr.key == key);
   }
+
+  public int count() {
+    int count = 0;
+    boolean[] marked = { false };
+    Node curr = head;
+    while (curr.next.getReference() != null) {
+      curr = curr.next.getReference();
+      curr.next.get(marked);
+      if (!marked[0])
+        count++;
+    }
+    return count - 1;
+  }
+
   /**
    * list node
    */
@@ -109,17 +132,21 @@ public class LockFreeList<T> {
      * next node in list
      */
     AtomicMarkableReference<Node> next;
+
     /**
      * Constructor for usual node
+     * 
      * @param item element in list
      */
-    Node(T item) {      // usual constructor
+    Node(T item) { // usual constructor
       this.item = item;
       this.key = item.hashCode();
       this.next = new AtomicMarkableReference<Node>(null, false);
     }
+
     /**
      * Constructor for sentinel node
+     * 
      * @param key should be min or max int value
      */
     Node(int key) { // sentinel constructor
@@ -128,7 +155,7 @@ public class LockFreeList<T> {
       this.next = new AtomicMarkableReference<Node>(null, false);
     }
   }
-  
+
   /**
    * Pair of adjacent list entries.
    */
@@ -141,34 +168,39 @@ public class LockFreeList<T> {
      * Later node.
      */
     public Node curr;
+
     /**
      * Constructor.
      */
     Window(Node pred, Node curr) {
-      this.pred = pred; this.curr = curr;
+      this.pred = pred;
+      this.curr = curr;
     }
   }
-  
+
   /**
    * If element is present, returns node and predecessor. If absent, returns
    * node with least larger key.
+   * 
    * @param head start of list
-   * @param key key to search for
-   * @return If element is present, returns node and predecessor. If absent, returns
-   * node with least larger key.
+   * @param key  key to search for
+   * @return If element is present, returns node and predecessor. If absent,
+   *         returns
+   *         node with least larger key.
    */
   public Window find(Node head, int key) {
     Node pred = null, curr = null, succ = null;
-    boolean[] marked = {false}; // is curr marked?
+    boolean[] marked = { false }; // is curr marked?
     boolean snip;
     retry: while (true) {
       pred = head;
       curr = pred.next.getReference();
       while (true) {
-        succ = curr.next.get(marked); 
-        while (marked[0]) {           // replace curr if marked
+        succ = curr.next.get(marked);
+        while (marked[0]) { // replace curr if marked
           snip = pred.next.compareAndSet(curr, succ, false, false);
-          if (!snip) continue retry;
+          if (!snip)
+            continue retry;
           curr = pred.next.getReference();
           succ = curr.next.get(marked);
         }
