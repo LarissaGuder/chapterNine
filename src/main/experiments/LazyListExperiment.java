@@ -1,5 +1,9 @@
 package main.experiments;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 import main.experiments.util.Random;
 import main.lists.LazyList;
 
@@ -73,25 +77,33 @@ public class LazyListExperiment {
             int probabilidadeContains, int valorMinimo, int valorMaximo, int tamanhoPopulacaoInicial,
             int warmup) {
 
-        for (int i = 2; i <= numeroThreads; i = i + 2) {
-            lazyList = new LazyList<>();
-            countRemove = 0;
-            countContains = 0;
-            countAdd = 0;
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter("LazyListExperiment.csv", "UTF-8");
+            writer.println("threads,add,contains,remove,population");
+            for (int i = 2; i <= numeroThreads; i = i + 2) {
+                lazyList = new LazyList<>();
+                countRemove = 0;
+                countContains = 0;
+                countAdd = 0;
 
-            for (int k = 0; k < tamanhoPopulacaoInicial; k++) {
-                lazyList.add(k);
+                for (int k = 0; k < tamanhoPopulacaoInicial; k++) {
+                    lazyList.add(k);
+                }
+
+                running = true;
+                count = false;
+
+                testThreads(i, tempoExecucao, probabilidadeAdd, probabilidadeContains, valorMinimo, valorMaximo);
+                writer.print(i + ",");
+                writer.print(countAdd / tempoExecucao + ",");
+                writer.print(countContains / tempoExecucao + ",");
+                writer.print(countRemove / tempoExecucao + ",");
+                writer.println(lazyList.count());
             }
-
-            running = true;
-            count = false;
-
-            testThreads(i, tempoExecucao, probabilidadeAdd, probabilidadeContains, valorMinimo, valorMaximo);
-            System.out.print(i + ",");
-            System.out.print(countAdd / tempoExecucao + ",");
-            System.out.print(countContains / tempoExecucao + ",");
-            System.out.print(countRemove / tempoExecucao + ",");
-            System.out.println(lazyList.count());
+            writer.close();
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
 
     }
