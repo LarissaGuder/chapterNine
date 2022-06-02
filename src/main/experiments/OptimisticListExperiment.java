@@ -86,7 +86,7 @@ public class OptimisticListExperiment {
                 countContains = 0;
                 countAdd = 0;
 
-                for (int k = 0; k < tamanhoPopulacaoInicial; k++) {
+                for (int k = tamanhoPopulacaoInicial; k > 0; k--) {
                     optimisticList.add(k);
                 }
 

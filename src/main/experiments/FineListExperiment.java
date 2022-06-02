@@ -87,7 +87,7 @@ public class FineListExperiment {
                 countContains = 0;
                 countAdd = 0;
 
-                for (int k = 0; k < tamanhoPopulacaoInicial; k++) {
+                for (int k = tamanhoPopulacaoInicial; k > 0; k--) {
                     fineList.add(k);
                 }
 
@@ -100,6 +100,7 @@ public class FineListExperiment {
                 writer.print(countContains / tempoExecucao + ",");
                 writer.print(countRemove / tempoExecucao + ",");
                 writer.println(fineList.count());
+                
             }
             writer.close();
         } catch (FileNotFoundException | UnsupportedEncodingException e) {

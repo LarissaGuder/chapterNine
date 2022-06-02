@@ -3,6 +3,7 @@ package main.experiments;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 
 import main.experiments.util.Random;
 import main.lists.CoarseList;
@@ -85,15 +86,25 @@ public class CoarseListExperiment {
         try {
             writer = new PrintWriter("CoarseListExperiment.csv", "UTF-8");
             writer.println("threads,add,contains,remove,population");
+
             for (int i = 2; i <= numeroThreads; i = i + 2) {
                 coarseList = new CoarseList<>();
+
+                for (int k = tamanhoPopulacaoInicial; k > 0; k--) {
+                    coarseList.add(k);
+                }
+                
+                System.out.print("Thread number " + i);
+                System.out.print(" > " + coarseList.count() + " > ");
+
+                System.out.println(tempoExecucao);
                 countRemove = 0;
                 countContains = 0;
                 countAdd = 0;
 
-                for (int k = 0; k < tamanhoPopulacaoInicial; k++) {
-                    coarseList.add(k);
-                }
+                // for (int k = 0; k < tamanhoPopulacaoInicial; k++) {
+                //     coarseList.add(k);
+                // }
 
                 running = true;
                 count = false;
@@ -104,6 +115,8 @@ public class CoarseListExperiment {
                 writer.print(countContains / tempoExecucao + ",");
                 writer.print(countRemove / tempoExecucao + ",");
                 writer.println(coarseList.count());
+                System.out.print(" | i |");
+
             }
             writer.close();
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
