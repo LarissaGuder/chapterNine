@@ -1,11 +1,10 @@
-## Folder Structure
+## Implementação de cenário de testes para o capítulo 9 do livro.
 
-The workspace contains two folders by default, where:
+A estrutura do projeto é:
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+- `src`: diretório com o código fonte
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+Os arquivos compilados estarão no diretório `bin`.
 
 Para compilar
 
