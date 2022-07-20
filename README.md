@@ -1,5 +1,13 @@
 ## Implementação de cenário de testes 
-para o capítulo 9 do livro The Art of Multiprocessor Programming (Herlihy, Maurice; Shavit, Nir.)
+para o capítulo `Linked Lists: The Role of Locking` do livro `The Art of Multiprocessor Programming (Herlihy, Maurice; Shavit, Nir.)`
+
+Foram implementadas as técnicas de:
+- Coarse List
+- Fine List
+- Lazy List
+- Lock Free List
+- Optimistic List
+
 
 A estrutura do projeto é:
 
